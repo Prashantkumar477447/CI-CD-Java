@@ -25,11 +25,11 @@ jobs:
         run: mvn clean install --batch-mode
 
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+        uses: SonarSource/sonarqube-scan-action@v5.0.0
         with:
           args: >
-            -Dsonar.projectKey=your_project_key
-            -Dsonar.organization=your_org
+            -Dsonar.projectKey=YOUR_PROJECT_KEY
+            -Dsonar.organization=YOUR_ORG
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
