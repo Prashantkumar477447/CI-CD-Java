@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - dev   # also allow dev branch
+      - dev
   pull_request:
 
 jobs:
@@ -45,9 +45,11 @@ jobs:
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
       - name: Snyk Security Scan
         uses: snyk/actions/maven@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          JAVA_HOME: ${{ env.JAVA_HOME }}
         with:
-         args: --severity-threshold=high
+          args: --severity-threshold=high
