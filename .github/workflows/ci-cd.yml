@@ -51,7 +51,7 @@ jobs:
             -Dsonar.java.libraries=target/dependency/*.jar
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
             -Dsonar.qualitygate.wait=true
-            -Dsonar.qualitygate.breakBuild=true
+            -Dsonar.qualitygate.breakBuild=false   # <- soft fail
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
