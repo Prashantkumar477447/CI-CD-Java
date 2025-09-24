@@ -35,12 +35,11 @@ jobs:
       - name: Run JaCoCo report (XML + HTML)
         run: mvn jacoco:report
 
-      # Copy dependencies for SonarQube analysis
+      # Only run SonarQube and Snyk on main branch
       - name: Copy Maven dependencies
         if: github.ref == 'refs/heads/main'
         run: mvn dependency:copy-dependencies -DoutputDirectory=target/dependency
 
-      # Only run SonarQube and Snyk on main branch
       - name: SonarCloud Scan
         if: github.ref == 'refs/heads/main'
         uses: SonarSource/sonarqube-scan-action@v5.0.0
@@ -52,6 +51,7 @@ jobs:
             -Dsonar.java.libraries=target/dependency/*.jar
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
             -Dsonar.qualitygate.wait=true
+            -Dsonar.qualitygate.breakBuild=true
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
