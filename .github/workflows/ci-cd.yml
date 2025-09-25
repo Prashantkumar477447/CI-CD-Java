@@ -141,5 +141,3 @@ jobs:
           git fetch origin dev
           git reset --hard origin/dev
           echo "Staging deployment completed!"
-
-    g deployment completed!"
