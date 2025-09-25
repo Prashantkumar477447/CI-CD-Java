@@ -52,7 +52,7 @@ jobs:
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        continue-on-error: true   # ✅ Prevent pipeline failure on Quality Gate
+        continue-on-error: true
 
       - name: Install Snyk CLI
         if: github.ref == 'refs/heads/main'
@@ -81,13 +81,36 @@ jobs:
         uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USER }}
-          key: ${{ secrets.DEPLOY_KEY }}
-          port: ${{ secrets.DEPLOY_PORT }}
+          username: ubuntu
+          key: |
+            ${{ secrets.DEPLOY_KEY }}
+          port: 22
           script: |
-            cd /path/to/your/deploy/folder
-            git pull origin main
+            # Create deploy folder if it doesn't exist
+            if [ ! -d "/home/ubuntu/my-php-app" ]; then
+              mkdir -p /home/ubuntu/my-php-app
+              echo "Created deploy folder."
+            fi
+
+            # Set proper permissions
+            chown -R ubuntu:ubuntu /home/ubuntu/my-php-app
+            chmod -R 755 /home/ubuntu/my-php-app
+
+            cd /home/ubuntu/my-php-app
+
+            # Initialize git if not already a repo
+            if [ ! -d ".git" ]; then
+              git init
+              git remote add origin https://github.com/Prashantkumar477447/CI-CD-Java.git
+            fi
+
+            # Pull latest changes
+            git fetch origin main
+            git reset --hard origin/main
+
+            # Build with Maven
             mvn clean install
-            # If using Docker:
+
+            # Optional Docker commands
             # docker-compose down
             # docker-compose up -d
